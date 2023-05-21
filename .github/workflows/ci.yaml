@@ -1,0 +1,88 @@
+name: ci
+
+on:
+  #push:
+  #  branches:
+  #    - "main"
+  workflow_dispatch:
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: 4.30.7
+      - name: prepare
+        env: 
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          URL="https://api.github.com/repos/${REPOSITORY}/pulls/${PR_NUMBER}/files"
+          response=$(curl -H "authorization: Bearer ${GITHUB_TOKEN}" \
+                          -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
+          FILES=$(echo -E "${response}" | jq -r '.[] | select(.filename?|match("[a-z0-9-]+/.+")) | .filename')
+          [ "${FILES}" = "null" ] && (msg "No files changed. Skip"; exit 0)
+          apps=$(echo "${FILES}" | awk -F/ '{print $1}' | sort | uniq | sort)
+
+          echo "::set-output name=app::${apps}"
+          for app in $apps; do
+            for k in arch version; do
+              echo ===$k===
+              echo "::set-output name=$k::$(yq -o=json .$k ${app}/.matrix.yaml)"
+            done
+            echo "::set-output name=base::$(yq -o=json '.base | keys' ${app}/.matrix.yaml)"
+          done
+    outputs:
+      base: ${{ steps.prepare.output.base }}
+      app: ${{ steps.prepare.output.app }}
+      arch: ${{ steps.prepare.output.arch }}
+      version: ${{ steps.prepare.output.version }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix:
+        app: ${{ needs.prepare.outputs.app }}
+        base: ${{ needs.prepare.outputs.base }}
+        version: ${{ needs.prepare.outputs.version }}
+        registry: ["docker.io", "ghcr.io"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: 4.30.7
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USER_SX }}
+          password: ${{ secrets.DOCKERHUB_TOKEN_SX }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Gen Docker Context
+        run: |
+          for app in ${{ needs.prepare.outputs.app }}; do
+            for base in ${{ needs.prepare.outputs.base }}; do
+              target_files=$(yq ".base.${base} | keys | .[]" $app/.matrix.yaml)
+              for target_file in ${target_files}; do
+                source_file=$(yq . ".base.${base}.${target_file}")
+                mkdir -p ${app}/${base}
+                cp -r ${app}/${source_file} ${app}/${base}/${target_file}
+              done
+            done
+          done
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ matrix.app }}/${{ matrix.base }}
+          push: true
+          tags: ${{ matrix.registry }}/${{ github.repository_owner }}/${{ matrix.app }}:${{ matrix.version }}-${{ matrix.base }}
