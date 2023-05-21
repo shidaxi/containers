@@ -48,9 +48,9 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        app: ${{ needs.prepare.outputs.app }}
-        base: ${{ needs.prepare.outputs.base }}
-        version: ${{ needs.prepare.outputs.version }}
+        app: ${{ fromJson(needs.prepare.outputs.app) }}
+        base: ${{ fromJson(needs.prepare.outputs.base) }}
+        version: ${{ fromJson(needs.prepare.outputs.version) }}
         registry: ["docker.io", "ghcr.io"]
     steps:
       - name: Checkout
