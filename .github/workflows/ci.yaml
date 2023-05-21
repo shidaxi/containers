@@ -68,6 +68,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Gen Docker Context
         run: |
+          set -x
           app=${{ needs.prepare.outputs.app }}
           bases=$(echo "${{ needs.prepare.outputs.base }}" | yq '.[]')
           for base in $bases; do
