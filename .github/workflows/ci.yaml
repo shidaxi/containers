@@ -22,7 +22,6 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          set -x
           URL="https://api.github.com/repos/${REPOSITORY}/pulls/${PR_NUMBER}/files"
           response=$(curl -H "authorization: Bearer ${{secrets.GITHUB_TOKEN}}" \
                           -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
@@ -47,7 +46,7 @@ jobs:
       - name: Checkout
         run: |
           echo ===${{ steps.prepare.output.version }}===
-          echo ===${{ fromJson(steps.prepare.output.version) }}===
+          # echo ===${{ fromJson(steps.prepare.output.version) }}===
   build:
     runs-on: ubuntu-latest
     needs: prepare
