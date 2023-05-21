@@ -16,7 +16,8 @@ jobs:
       - uses: chrisdickinson/setup-yq@latest
         with:
           yq-version: v4.30.7
-      - name: prepare
+      - name: Prepare
+        id: prepare
         env: 
           REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
