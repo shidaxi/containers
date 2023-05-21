@@ -28,7 +28,7 @@ jobs:
                           -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
           FILES=$(echo -E "${response}" | jq -r '.[] | select(.filename?|match("[a-z0-9-]+/.+")) | .filename')
           [ "${FILES}" = "null" ] && (msg "No files changed. Skip"; exit 0)
-          apps=$(echo "${FILES}" | awk -F/ '{print $1}' | sort | uniq | sort)
+          apps=$(echo "${FILES}" | awk -F/ '{print $1}' | grep -v .github | sort | uniq | sort)
 
           echo "::set-output name=app::${apps}"
           for app in $apps; do
