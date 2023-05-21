@@ -1,0 +1,18 @@
+bases:
+  - alpine-3
+  - alpine-3.18
+  - alpine-3.17
+  - debian-11
+  - debian-bullseye
+
+archs:
+  - linux/386
+  - linux/amd64
+  - linux/arm/v7
+  - linux/arm64/v8
+  - linux/ppc64le
+  - linux/s390x
+
+versions:
+  - v0.1
+  - v0.2

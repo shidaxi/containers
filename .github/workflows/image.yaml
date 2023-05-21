@@ -6,26 +6,44 @@ on:
   #    - "main"
   workflow_dispatch:
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Login to Docker Hub
+      - uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: 4.30.7
+      - name: prepare
+        run: |
+          echo
+    outputs:
+      bases:
+      apps:
+      versions: 
+
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix:
+        apps: ${{ needs.prepare.outputs.apps }}
+        bases: ${{ needs.prepare.outputs.bases }}
+        versions: ${{ needs.prepare.outputs.versions }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USER_SX }}
           password: ${{ secrets.DOCKERHUB_TOKEN_SX }}
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ./Dockerfile
+          context: ${{ matrix.apps }}
+          file: ${{ matrix.apps } }}/Dockerfile.${{ matrix.bases }}
           push: true
-          tags: ${{ secrets.DOCKERHUB_USER_SX }}/test01:latest
+          tags: ${{ secrets.DOCKERHUB_USER_SX }}/${{ apps }}:${{ matrix.versions }}-${{ matrix.bases }}
