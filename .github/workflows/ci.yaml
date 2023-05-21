@@ -23,6 +23,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           URL="https://api.github.com/repos/${REPOSITORY}/pulls/${PR_NUMBER}/files"
+          echo "URL=${URL}"
           response=$(curl -H "authorization: Bearer ${GITHUB_TOKEN}" \
                           -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
           echo "response=${response}"
