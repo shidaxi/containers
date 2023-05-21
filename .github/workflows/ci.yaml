@@ -31,9 +31,9 @@ jobs:
           app=$(echo "${FILES}" | awk -F/ '{print $1}' | grep -v .github | sort | uniq | sort | head -1)
 
           echo "::set-output name=app::${app}"
-          echo "::set-output name=arch::$(yq -I=0 -o=json .arch ${app}/.matrix.yaml)"
-          echo "::set-output name=version::$(yq -I=0 -o=json .version ${app}/.matrix.yaml)"
-          echo "::set-output name=base::$(yq -I=0 -o=json '.base | keys' ${app}/.matrix.yaml)"
+          echo "::set-output name=arch::\'$(yq -I=0 -o=json .arch ${app}/.matrix.yaml)\'"
+          echo "::set-output name=version::\'$(yq -I=0 -o=json .version ${app}/.matrix.yaml)\'"
+          echo "::set-output name=base::\'$(yq -I=0 -o=json '.base | keys' ${app}/.matrix.yaml)\'"
     outputs:
       app: ${{ steps.prepare.output.app }}
       base: ${{ steps.prepare.output.base }}
