@@ -25,7 +25,9 @@ jobs:
           URL="https://api.github.com/repos/${REPOSITORY}/pulls/${PR_NUMBER}/files"
           response=$(curl -H "authorization: Bearer ${GITHUB_TOKEN}" \
                           -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
+          echo "response=${response}"
           FILES=$(echo -E "${response}" | jq -r '.[] | select(.filename?|match("[a-z0-9-]+/.+")) | .filename')
+          echo "files=${FILES}"
           [ "${FILES}" = "null" ] && (msg "No files changed. Skip"; exit 0)
           apps=$(echo "${FILES}" | awk -F/ '{print $1}' | sort | uniq | sort)
 
