@@ -34,10 +34,10 @@ jobs:
           echo "::set-output name=version::$(yq -I=0 -o=json .version ${app}/.matrix.yaml)"
           echo "::set-output name=base::$(yq -I=0 -o=json '.base | keys' ${app}/.matrix.yaml)"
     outputs:
-      app: ${{ steps.prepare.output.app }}
-      base: ${{ steps.prepare.output.base }}
-      arch: ${{ steps.prepare.output.arch }}
-      version: ${{ steps.prepare.output.version }}
+      app: ${{ steps.prepare.outputs.app }}
+      base: ${{ steps.prepare.outputs.base }}
+      arch: ${{ steps.prepare.outputs.arch }}
+      version: ${{ steps.prepare.outputs.version }}
 
   test:
     runs-on: ubuntu-latest
@@ -45,8 +45,9 @@ jobs:
     steps:
       - name: Checkout
         run: |
-          echo ===${{ steps.prepare.output.version }}===
-  build:
+          echo ===${{ needs.prepare.outputs.version }}===
+          echo ===${{ fromJson(needs.prepare.outputs.version) }}===
+  ild:
     runs-on: ubuntu-latest
     needs: prepare
     strategy:
