@@ -33,10 +33,9 @@ jobs:
           echo "::set-output name=app::${apps}"
           for app in $apps; do
             for k in arch version; do
-              echo ===$k===
-              echo "::set-output name=$k::$(yq -o=json .$k ${app}/.matrix.yaml)"
+              echo "::set-output name=$k::$(yq -I=0 -o=json .$k ${app}/.matrix.yaml)"
             done
-            echo "::set-output name=base::$(yq -o=json '.base | keys' ${app}/.matrix.yaml)"
+            echo "::set-output name=base::$(yq -I=0 -o=json '.base | keys' ${app}/.matrix.yaml)"
           done
     outputs:
       base: ${{ steps.prepare.output.base }}
