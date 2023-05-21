@@ -22,17 +22,14 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
+          set -x
           URL="https://api.github.com/repos/${REPOSITORY}/pulls/${PR_NUMBER}/files"
-          echo "URL=${URL}"
-          response=$(curl -H "authorization: Bearer ${GITHUB_TOKEN}" \
+          response=$(curl -H "authorization: Bearer ${secrets.GITHUB_TOKEN}" \
                           -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
-          echo "response=${response}"
           FILES=$(echo -E "${response}" | jq -r '.[] | select(.filename?|match("[a-z0-9-]+/.+")) | .filename')
-          echo "files=${FILES}"
           [ "${FILES}" = "null" ] && (msg "No files changed. Skip"; exit 0)
           apps=$(echo "${FILES}" | awk -F/ '{print $1}' | sort | uniq | sort)
 
-          echo "app=${apps}"
           echo "::set-output name=app::${apps}"
           for app in $apps; do
             for k in arch version; do
