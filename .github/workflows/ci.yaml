@@ -46,7 +46,6 @@ jobs:
       - name: Checkout
         run: |
           echo ===${{ steps.prepare.output.version }}===
-          # echo ===${{ fromJson(steps.prepare.output.version) }}===
   build:
     runs-on: ubuntu-latest
     needs: prepare
