@@ -24,7 +24,7 @@ jobs:
         run: |
           set -x
           URL="https://api.github.com/repos/${REPOSITORY}/pulls/${PR_NUMBER}/files"
-          response=$(curl -H "authorization: Bearer ${secrets.GITHUB_TOKEN}" \
+          response=$(curl -H "authorization: Bearer ${{secrets.GITHUB_TOKEN}}" \
                           -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
           FILES=$(echo -E "${response}" | jq -r '.[] | select(.filename?|match("[a-z0-9-]+/.+")) | .filename')
           [ "${FILES}" = "null" ] && (msg "No files changed. Skip"; exit 0)
