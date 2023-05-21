@@ -1,11 +1,11 @@
 base:
-  alpine:3: &alpine3
+  alpine-3: &alpine3
     Dockerfile: Dockerfile.alpine
-  alpine:3.18: *alpine3
-  alpine:3.17: *alpine3
-  debian:11: &debian11
+  alpine-3.18: *alpine3
+  alpine-3.17: *alpine3
+  debian-11: &debian11
     Dockerfile: Dockerfile.debian
-  debian:bullseye: *debian11
+  debian-bullseye: *debian11
 
 arch:
   - linux/386

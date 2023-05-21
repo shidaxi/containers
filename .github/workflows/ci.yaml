@@ -39,14 +39,6 @@ jobs:
       arch: ${{ steps.prepare.outputs.arch }}
       version: ${{ steps.prepare.outputs.version }}
 
-  test:
-    runs-on: ubuntu-latest
-    needs: prepare
-    steps:
-      - name: Checkout
-        run: |
-          echo ===${{ needs.prepare.outputs.version }}===
-          echo ===${{ fromJson(needs.prepare.outputs.version) }}===
   ild:
     runs-on: ubuntu-latest
     needs: prepare
