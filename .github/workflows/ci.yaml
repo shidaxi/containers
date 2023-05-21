@@ -29,6 +29,7 @@ jobs:
           [ "${FILES}" = "null" ] && (msg "No files changed. Skip"; exit 0)
           apps=$(echo "${FILES}" | awk -F/ '{print $1}' | sort | uniq | sort)
 
+          echo "app=${apps}"
           echo "::set-output name=app::${apps}"
           for app in $apps; do
             for k in arch version; do
