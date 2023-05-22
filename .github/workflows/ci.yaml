@@ -89,6 +89,6 @@ jobs:
         with:
           context: ${{ needs.prepare.outputs.app }}/${{ matrix.base }}
           push: true
-          tags: ${{ matrix.registry }}/${{ github.repository_owner }}/${{ needs.prepare.outputs.app }}:${{ matrix.version }}-${{ matrix.base }}
+          tags: ${{ matrix.registry }}/${{ secrets.DOCKERHUB_USER_SX }}/${{ needs.prepare.outputs.app }}:${{ matrix.version }}-${{ matrix.base }}
           build-args: |
             VERSION=${{ matrix.version }}
