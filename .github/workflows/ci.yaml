@@ -1,67 +1,72 @@
 name: ci
 
 on:
-  #push:
-  #  branches:
-  #    - "main"
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+    paths:
+      - '**/*'
   workflow_dispatch:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: chrisdickinson/setup-yq@latest
         with:
-          yq-version: 4.30.7
-      - name: prepare
+          yq-version: v4.30.7
+      - name: Prepare
+        id: prepare
         env: 
           REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           URL="https://api.github.com/repos/${REPOSITORY}/pulls/${PR_NUMBER}/files"
-          response=$(curl -H "authorization: Bearer ${GITHUB_TOKEN}" \
+          response=$(curl -H "authorization: Bearer ${{secrets.GITHUB_TOKEN}}" \
                           -H "Accept: application/vnd.github.v3+json" -s -X GET -G $URL)
           FILES=$(echo -E "${response}" | jq -r '.[] | select(.filename?|match("[a-z0-9-]+/.+")) | .filename')
           [ "${FILES}" = "null" ] && (msg "No files changed. Skip"; exit 0)
-          apps=$(echo "${FILES}" | awk -F/ '{print $1}' | sort | uniq | sort)
+          app=$(echo "${FILES}" | awk -F/ '{print $1}' | grep -v .github | sort | uniq | sort | head -1)
 
-          echo "::set-output name=app::${apps}"
-          for app in $apps; do
-            for k in arch version; do
-              echo ===$k===
-              echo "::set-output name=$k::$(yq -o=json .$k ${app}/.matrix.yaml)"
-            done
-            echo "::set-output name=base::$(yq -o=json '.base | keys' ${app}/.matrix.yaml)"
-          done
+          echo "::set-output name=app::${app}"
+          echo "::set-output name=platform::$(yq -I=0 -o=csv .platform ${app}/.matrix.yaml)"
+          echo "::set-output name=version::$(yq -I=0 -o=json .version ${app}/.matrix.yaml)"
+          echo "::set-output name=base::$(yq -I=0 -o=json '.base | keys' ${app}/.matrix.yaml)"
     outputs:
-      base: ${{ steps.prepare.output.base }}
-      app: ${{ steps.prepare.output.app }}
-      arch: ${{ steps.prepare.output.arch }}
-      version: ${{ steps.prepare.output.version }}
+      app: ${{ steps.prepare.outputs.app }}
+      base: ${{ steps.prepare.outputs.base }}
+      platform: ${{ steps.prepare.outputs.platform }}
+      version: ${{ steps.prepare.outputs.version }}
 
   build:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     needs: prepare
     strategy:
       matrix:
-        app: ${{ needs.prepare.outputs.app }}
-        base: ${{ needs.prepare.outputs.base }}
-        version: ${{ needs.prepare.outputs.version }}
+        base: ${{ fromJson(needs.prepare.outputs.base) }}
+        version: ${{ fromJson(needs.prepare.outputs.version) }}
         registry: ["docker.io", "ghcr.io"]
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: chrisdickinson/setup-yq@latest
         with:
-          yq-version: 4.30.7
+          yq-version: v4.30.7
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USER_SX }}
-          password: ${{ secrets.DOCKERHUB_TOKEN_SX }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -70,19 +75,30 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Gen Docker Context
         run: |
-          for app in ${{ needs.prepare.outputs.app }}; do
-            for base in ${{ needs.prepare.outputs.base }}; do
-              target_files=$(yq ".base.${base} | keys | .[]" $app/.matrix.yaml)
-              for target_file in ${target_files}; do
-                source_file=$(yq . ".base.${base}.${target_file}")
-                mkdir -p ${app}/${base}
-                cp -r ${app}/${source_file} ${app}/${base}/${target_file}
-              done
+          set -x
+          app=${{ needs.prepare.outputs.app }}
+          bases=$(echo "${{ needs.prepare.outputs.base }}" | yq '.[]')
+          versions=$(echo "${{ needs.prepare.outputs.version }}" | yq '.[]')
+          for base in $bases; do
+            target_files=$(yq '.base."'${base}'" | keys | .[]' $app/.matrix.yaml)
+            for target_file in ${target_files}; do
+              source_file=$(yq '.base."'${base}'"."'${target_file}'"' $app/.matrix.yaml)
+              mkdir -p ${app}/${base}
+              cp -r ${app}/${source_file} ${app}/${base}/${target_file}
+              if [[ "${target_file}" == "Dockerfile" ]]; then
+                base_image=${base/-/:}
+                sed -i 's/_BASE_/'${base_image}'/' ${app}/${base}/${target_file}
+              fi
             done
           done
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.app }}/${{ matrix.base }}
+          context: ${{ needs.prepare.outputs.app }}/${{ matrix.base }}
           push: true
-          tags: ${{ matrix.registry }}/${{ github.repository_owner }}/${{ matrix.app }}:${{ matrix.version }}-${{ matrix.base }}
+          platforms: ${{ needs.prepare.outputs.platform }}
+          tags: |
+            ${{ matrix.registry }}/${{ github.repository_owner }}/${{ needs.prepare.outputs.app }}:${{ matrix.version }}-${{ matrix.base }}
+          build-args: |
+            VERSION=${{ matrix.version }}
+          

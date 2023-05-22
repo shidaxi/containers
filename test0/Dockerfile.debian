@@ -1,12 +1,6 @@
-ARG BASE
-ARG VERSION
-FROM ${BASE/-/:}
-COPY --chmod=755 <<EOF /app/run.sh
-#!/bin/sh
-while true; do
-  echo -ne "The time is now $(date +%T), apt install, version ${VERSION}\\r"
-  sleep 1
-done
-EOF
+ARG BASE=_BASE_
+ARG VERSION=
 
+FROM ${BASE}
+COPY --chmod=755 run.sh /app/run.sh
 ENTRYPOINT /app/run.sh
