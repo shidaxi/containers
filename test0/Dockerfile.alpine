@@ -1,6 +1,7 @@
 ARG BASE
 ARG VERSION
-FROM ${BASE}
+
+FROM ${BASE/-/:}
 COPY --chmod=755 <<EOF /app/run.sh
 #!/bin/sh
 while true; do

@@ -85,3 +85,4 @@ jobs:
           context: ${{ needs.prepare.outputs.app }}/${{ matrix.base }}
           push: true
           tags: ${{ matrix.registry }}/${{ github.repository_owner }}/${{ needs.prepare.outputs.app }}:${{ matrix.version }}-${{ matrix.base }}
+          build-args: "BASE=${{ matrix.base }}, VERSION=${{ matrix.version }}"
