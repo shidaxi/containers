@@ -1,5 +1,5 @@
 ARG BASE=_BASE_
-ARG VERSION=_VERSION_
+ARG VERSION=
 
 FROM ${BASE}
 COPY --chmod=755 run.sh /app/run.sh

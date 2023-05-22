@@ -71,6 +71,7 @@ jobs:
           set -x
           app=${{ needs.prepare.outputs.app }}
           bases=$(echo "${{ needs.prepare.outputs.base }}" | yq '.[]')
+          versions=$(echo "${{ needs.prepare.outputs.version }}" | yq '.[]')
           for base in $bases; do
             target_files=$(yq '.base."'${base}'" | keys | .[]' $app/.matrix.yaml)
             for target_file in ${target_files}; do
@@ -80,7 +81,6 @@ jobs:
               if [[ "${target_file}" == "Dockerfile" ]]; then
                 base_image=${base/-/:}
                 sed -i 's/_BASE_/'${base_image}'/' ${app}/${base}/${target_file}
-                sed -i 's/_VERSION_/${{ matrix.version }}/' ${app}/${base}/${target_file}
               fi
             done
           done
@@ -91,5 +91,4 @@ jobs:
           push: true
           tags: ${{ matrix.registry }}/${{ github.repository_owner }}/${{ needs.prepare.outputs.app }}:${{ matrix.version }}-${{ matrix.base }}
           build-args: |
-            BASE=${{ matrix.base }}
             VERSION=${{ matrix.version }}
