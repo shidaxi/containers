@@ -1,14 +1,19 @@
 base:
   alpine-3: 
     Dockerfile: Dockerfile.alpine
+    run.sh: run.sh
   alpine-3.18: 
     Dockerfile: Dockerfile.alpine
+    run.sh: run.sh
   alpine-3.17: 
     Dockerfile: Dockerfile.alpine
+    run.sh: run.sh
   debian-11: 
     Dockerfile: Dockerfile.debian
+    run.sh: run.sh
   debian-bullseye: 
     Dockerfile: Dockerfile.debian
+    run.sh: run.sh
 
 arch:
   - linux/386
