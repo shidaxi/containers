@@ -30,13 +30,13 @@ jobs:
           app=$(echo "${FILES}" | awk -F/ '{print $1}' | grep -v .github | sort | uniq | sort | head -1)
 
           echo "::set-output name=app::${app}"
-          echo "::set-output name=platforms::$(yq -I=0 -o=json .platforms ${app}/.matrix.yaml)"
+          echo "::set-output name=platform::$(yq -I=0 -o=csv .platform ${app}/.matrix.yaml)"
           echo "::set-output name=version::$(yq -I=0 -o=json .version ${app}/.matrix.yaml)"
           echo "::set-output name=base::$(yq -I=0 -o=json '.base | keys' ${app}/.matrix.yaml)"
     outputs:
       app: ${{ steps.prepare.outputs.app }}
       base: ${{ steps.prepare.outputs.base }}
-      platforms: ${{ steps.prepare.outputs.platforms }}
+      platform: ${{ steps.prepare.outputs.platform }}
       version: ${{ steps.prepare.outputs.version }}
 
   build:
@@ -92,7 +92,7 @@ jobs:
         with:
           context: ${{ needs.prepare.outputs.app }}/${{ matrix.base }}
           push: true
-          platforms: ${{ fromJson(needs.prepare.outputs.platforms) }}
+          platforms: ${{ needs.prepare.outputs.platform }}
           tags: ${{ matrix.registry }}/${{ github.repository_owner }}/${{ needs.prepare.outputs.app }}:${{ matrix.version }}-${{ matrix.base }}
           build-args: |
             VERSION=${{ matrix.version }}
