@@ -1,0 +1,12 @@
+base:
+  alpine-3: 
+    Dockerfile: Dockerfile.alpine
+  debian-11: 
+    Dockerfile: Dockerfile.debian
+    
+platform:
+  - linux/amd64
+  - linux/arm64
+
+version:
+  - v2.12.0
