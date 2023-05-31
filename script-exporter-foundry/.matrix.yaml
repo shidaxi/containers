@@ -9,5 +9,4 @@ platform:
   - linux/arm64
 
 version:
-  - v2.12.0
-  
+  - 2.12.0
