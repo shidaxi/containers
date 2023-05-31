@@ -1,7 +1,7 @@
 ARG BASE=_BASE_
 ARG VERSION
 
-FROM golang:${VERSION}-bulleye as golang
+FROM golang:${VERSION}-bullseye as golang
 
 FROM ${BASE}
 
