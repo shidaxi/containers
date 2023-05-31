@@ -1,13 +1,13 @@
 ARG BASE=_BASE_
-ARG VERSION
 
 FROM ${BASE}
 
-ARG BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
+ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
 
 RUN apt update && apt install -y wget ca-certificates && \
     wget https://github.com/ricoberger/script_exporter/releases/download/${VERSION}/script_exporter-${TARGETOS}-${TARGETARCH} \
     -O /usr/local/bin/script_exporter && \
     chmod +x /usr/local/bin/script_exporter && \
-    wget https://github.com/foundry-rs/foundry/releases/download/nightly/foundry_nightly_${TARGETOS}_${TARGETARCH}.tar.gz && \
-    -O- | tar xzf - -C /usr/local/bin/
+    wget https://github.com/foundry-rs/foundry/releases/download/nightly/foundry_nightly_${TARGETOS}_${TARGETARCH}.tar.gz \
+    -O - | tar xzf - -C /usr/local/bin/ && \
+    apt clean all
