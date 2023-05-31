@@ -1,0 +1,18 @@
+ARG BASE=_BASE_
+ARG VERSION
+
+FROM golang:${VERSION}-bulleye as golang
+
+FROM ${BASE}
+
+RUN apt update && apt install -y ca-certificates
+
+ARG BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
+
+COPY --from=golang /usr/local/go /usr/local/go
+
+ENV GOPATH /go
+ENV PATH /usr/local/go/bin:$PATH
+ENV PATH $GOPATH/bin:$PATH
+
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 1777 "$GOPATH"
