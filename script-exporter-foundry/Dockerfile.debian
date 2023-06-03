@@ -6,7 +6,7 @@ ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt install -y wget ca-certificates git && \
+RUN apt update && apt install -y wget ca-certificates git jq && \
     wget https://github.com/ricoberger/script_exporter/releases/download/v${VERSION}/script_exporter-${TARGETOS}-${TARGETARCH} \
     -O /usr/local/bin/script_exporter && \
     chmod +x /usr/local/bin/script_exporter && \
