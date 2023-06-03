@@ -4,7 +4,7 @@ FROM ${BASE}
 
 ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
 
-RUN apk add --no-cache ca-certificates curl git jq && \
+RUN apk add --no-cache ca-certificates bash curl git jq && \
     wget https://github.com/ricoberger/script_exporter/releases/download/v${VERSION}/script_exporter-${TARGETOS}-${TARGETARCH} \
     -O /usr/local/bin/script_exporter && \
     chmod +x /usr/local/bin/script_exporter && \
