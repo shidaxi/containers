@@ -1,6 +1,4 @@
 base:
-  node-16-alpine: 
-    Dockerfile: Dockerfile.alpine
   node-16-bullseye: 
     Dockerfile: Dockerfile.debian
 
