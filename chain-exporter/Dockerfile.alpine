@@ -5,5 +5,5 @@ FROM ${BASE}
 ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
 
 RUN apk add --no-cache ca-certificates wget && \
-    wget -O - https://github.com/shidaxi/chain-exporter/releases/download/v${VERSION}/chain-exporter_${VERSION}_${TARGETOS}-${TARGETARCH}.tar.gz \
+    wget -O - https://github.com/shidaxi/chain-exporter/releases/download/v${VERSION}/chain-exporter_${VERSION}_${TARGETOS}_${TARGETARCH}.tar.gz \
         | tar xzf - -C /usr/local/bin/
