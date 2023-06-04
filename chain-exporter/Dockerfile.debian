@@ -6,7 +6,7 @@ ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt install -y curl && \
-    wget https://github.com/shidaxi/chain-exporter/releases/download/v${VERSION}/chain-exporter-${TARGETOS}-${TARGETARCH} \
-    -O /usr/local/bin/chain-exporter
+RUN apt update && apt install -y wget curl && \
+    wget https://github.com/shidaxi/chain-exporter/releases/download/v${VERSION}/chain-exporter-${TARGETOS}-${TARGETARCH}.tar.gz \
+    -O - | tar xzf - -C /usr/local/bin/ && \
     apt clean all
