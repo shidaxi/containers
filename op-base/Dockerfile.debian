@@ -9,7 +9,7 @@ ARG BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt install -y ca-certificates build-essential wget coreutils openssl libuv1 libudev-dev libusb-1.0-0-dev python-is-python3 git make jq bc less && \
+RUN apt update && apt install -y ca-certificates build-essential wget coreutils openssl libuv1 libudev-dev libusb-1.0-0-dev python-is-python3 git make jq bc less postgresql-13 vim net-tools && \
     wget -O -  https://github.com/davionlabs-devops/foundry/releases/download/nightly-2023-01-03/foundry_nightly_${TARGETOS}_${TARGETARCH}.tar.gz \
     | tar xzf - -C /usr/local/bin/ && \
     wget -O - https://gethstore.blob.core.windows.net/builds/geth-alltools-${TARGETOS}-${TARGETARCH}-1.12.0-e501b3b0.tar.gz \
@@ -26,7 +26,7 @@ RUN apt update && apt install -y ca-certificates build-essential wget coreutils 
 COPY --from=golang /usr/local/go /usr/local/go
 
 ENV GOPATH /go
-ENV PATH /usr/local/go/bin:$PATH
+ENV PATH /usr/lib/postgresql/13/bin:/usr/local/go/bin:$PATH
 ENV PATH $GOPATH/bin:$PATH
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 1777 "$GOPATH"
