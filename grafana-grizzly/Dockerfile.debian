@@ -1,0 +1,10 @@
+ARG BASE=_BASE_
+
+FROM ${BASE}
+
+ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
+
+RUN apt update && apt install -y wget curl && \
+    curl -sSL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.30.1/yq_${TARGETOS}_${TARGETARCH} && \
+    wget -O /usr/bin/grr https://github.com/grafana/grizzly/releases/download/v${VERSION}/grr-${TARGETOS}-${TARGETARCH} && \
+    chmod +x /usr/bin/grr
