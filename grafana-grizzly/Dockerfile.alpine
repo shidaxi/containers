@@ -5,5 +5,5 @@ FROM ${BASE}
 ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
 
 RUN apk add --no-cache ca-certificates wget && \
-    wget -O /usr/bin/grr https://github.com/grafana/grizzly/releases/download/v${VERSION}/grr-${TARGETOS}-${TARGETARCH}.tar.gz && \
+    wget -O /usr/bin/grr https://github.com/grafana/grizzly/releases/download/v${VERSION}/grr-${TARGETOS}-${TARGETARCH} && \
     chmod +x /usr/bin/grr
