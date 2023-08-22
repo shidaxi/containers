@@ -1,5 +1,5 @@
 base:
-  grafana/grizzly-amd64: 
+  grafana/grizzly-0.2.1-amd64: 
     Dockerfile: Dockerfile.alpine
 
 platform:
@@ -7,4 +7,3 @@ platform:
 
 version:
   - 0.2.1
-  
