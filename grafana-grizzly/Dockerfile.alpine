@@ -1,0 +1,9 @@
+ARG BASE=_BASE_
+
+FROM ${BASE}
+
+ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
+
+RUN apk add --no-cache ca-certificates wget jq && \
+    curl -sSL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.30.1/yq_${TARGETOS}_${TARGETARCH} && \
+    chmod +x /usr/local/bin/yq
