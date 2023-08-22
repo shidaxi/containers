@@ -4,6 +4,7 @@ FROM ${BASE}
 
 ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
 
-RUN apk add --no-cache ca-certificates wget && \
+RUN apk add --no-cache ca-certificates wget jq && \
+    curl -sSL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.30.1/yq_${TARGETOS}_${TARGETARCH} && \
     wget -O /usr/bin/grr https://github.com/grafana/grizzly/releases/download/v${VERSION}/grr-${TARGETOS}-${TARGETARCH} && \
     chmod +x /usr/bin/grr
