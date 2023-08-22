@@ -87,7 +87,7 @@ jobs:
               cp -r ${app}/${source_file} ${app}/${base}/${target_file}
               if [[ "${target_file}" == "Dockerfile" ]]; then
                 base_image=${base/-/:}
-                sed -i 's/_BASE_/'${base_image}'/' ${app}/${base}/${target_file}
+                sed -i 's#_BASE_#'${base_image}'#' ${app}/${base}/${target_file}
               fi
             done
           done
