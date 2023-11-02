@@ -14,12 +14,12 @@ RUN apt update && apt install -y ca-certificates build-essential wget coreutils 
     | tar xzf - -C /usr/local/bin/ && \
     wget -O - https://gethstore.blob.core.windows.net/builds/geth-alltools-${TARGETOS}-${TARGETARCH}-1.12.0-e501b3b0.tar.gz \
     | tar xzf - -C /usr/local/bin/ --strip-components 1 && \
-    curl -sSL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.30.1/yq_${TARGETOS}_${TARGETARCH} && \
+    curl -sSL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.34.2/yq_${TARGETOS}_${TARGETARCH} && \
     curl -sSL -o /usr/local/bin/gomplate https://github.com/hairyhenderson/gomplate/releases/download/v3.11.5/gomplate_${TARGETOS}-${TARGETARCH}-slim && \
     curl -sSL -o /usr/local/bin/graph-node https://github.com/android-programmer/graph-node/releases/download/v0.28.2/graph-node && \
-    chmod +x /usr/local/bin/yq && \
-    chmod +x /usr/local/bin/gomplate && \
-    chmod +x /usr/local/bin/graph-node && \
+    curl -sSL -o /usr/local/bin/supervisord https://github.com/shidaxi/supervisord/releases/download/v0.7.3-envfiles/supervisord-v0.7.3-envfiles-${TARGETOS}-${TARGETARCH} && \
+    curl -sSL -o /usr/local/bin/task https://github.com/go-task/task/releases/download/v3.31.0/task_${TARGETOS}_${TARGETARCH}.tar.gz \
+    chmod +x /usr/local/bin/{task, yq, gomplate, graph-node, supervisord} && \
     curl -sSL https://dist.ipfs.tech/kubo/v0.18.1/kubo_v0.18.1_linux-amd64.tar.gz | tar -xzf - && cd kubo && bash install.sh && \
     apt clean all
 
