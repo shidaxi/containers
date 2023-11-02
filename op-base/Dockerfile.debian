@@ -18,7 +18,7 @@ RUN apt update && apt install -y ca-certificates build-essential wget coreutils 
     curl -sSL -o /usr/local/bin/gomplate https://github.com/hairyhenderson/gomplate/releases/download/v3.11.5/gomplate_${TARGETOS}-${TARGETARCH}-slim && \
     curl -sSL -o /usr/local/bin/graph-node https://github.com/android-programmer/graph-node/releases/download/v0.28.2/graph-node && \
     curl -sSL -o /usr/local/bin/supervisord https://github.com/shidaxi/supervisord/releases/download/v0.7.3-envfiles/supervisord-v0.7.3-envfiles-${TARGETOS}-${TARGETARCH} && \
-    curl -sSL -o /usr/local/bin/task https://github.com/go-task/task/releases/download/v3.31.0/task_${TARGETOS}_${TARGETARCH}.tar.gz && \
+    curl -sSL https://github.com/go-task/task/releases/download/v3.31.0/task_${TARGETOS}_${TARGETARCH}.tar.gz | tar xzf - -C /usr/local/bin && \
     chmod +x /usr/local/bin/{task, yq, gomplate, graph-node, supervisord} && \
     curl -sSL https://dist.ipfs.tech/kubo/v0.18.1/kubo_v0.18.1_linux-amd64.tar.gz | tar -xzf - && cd kubo && bash install.sh && \
     apt clean all
