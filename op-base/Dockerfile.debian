@@ -23,6 +23,7 @@ RUN apt update && apt install -y ca-certificates build-essential wget coreutils 
     curl -sSL -o /usr/local/bin/supervisord https://github.com/shidaxi/supervisord/releases/download/v0.7.3-envfiles/supervisord-v0.7.3-envfiles-${TARGETOS}-${TARGETARCH} && \
     curl -sSL https://github.com/go-task/task/releases/download/v3.31.0/task_${TARGETOS}_${TARGETARCH}.tar.gz | tar xzf - -C /usr/local/bin && \
     curl -sSL https://github.com/cli/cli/releases/download/v2.38.0/gh_2.38.0_${TARGETOS}_${TARGETARCH}.tar.gz | tar xzf - -C /usr/local/bin --strip-components 2 && \
+    curl -sSL https://get.helm.sh/helm-v3.13.2-${TARGETOS}-${TARGETARCH}.tar.gz | tar xzf - -C /usr/local/bin --strip-components 1 && \
     chmod +x /usr/local/bin/yq && \
     chmod +x /usr/local/bin/gomplate && \
     chmod +x /usr/local/bin/graph-node && \
