@@ -2,7 +2,7 @@ base:
   node-16-bullseye: 
     Dockerfile: Dockerfile.debian
   node-16-bookworm: 
-    Dockerfile: Dockerfile.debian
+    Dockerfile: Dockerfile.debian-bookworm
 
 platform:
   - linux/amd64
