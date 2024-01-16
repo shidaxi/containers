@@ -1,6 +1,10 @@
 base:
   op-base-0.2.0:
     Dockerfile: Dockerfile.debian
+    apps: apps
+    app.py: app.py
+    command.py: command.py
+    requirements.txt: requirements.txt
 
 platform:
   - linux/amd64
