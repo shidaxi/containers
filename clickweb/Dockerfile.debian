@@ -13,7 +13,7 @@ RUN apt install python3-pip -y && \
 WORKDIR /app
 
 ADD *.py .
-ADD apps ./apps
+ADD ./apps ./apps
 
 ENV FLASK_ENV=development
 ENV FLASK_APP=app.py
