@@ -1,0 +1,2 @@
+click-web==0.8.3
+requests==2.31.0
