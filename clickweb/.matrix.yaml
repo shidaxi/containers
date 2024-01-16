@@ -1,0 +1,11 @@
+base:
+  op-base-0.2.0:
+    Dockerfile: Dockerfile.debian
+
+platform:
+  - linux/amd64
+  - linux/arm64
+
+version:
+  - 0.2.0
+  
