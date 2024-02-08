@@ -1,9 +1,10 @@
 base:
-  netshoot-v0.11: 
+  alpine-3.19:
     Dockerfile: Dockerfile.alpine
 
 platform:
   - linux/amd64
+  - linux/arm64
 
 version:
   - "2024-01-09"

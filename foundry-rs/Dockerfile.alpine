@@ -1,7 +1,7 @@
-ARG BASE=nicolaka/netshoot:v0.11
+ARG BASE=_BASE_
 ARG VERSION
 
-FROM nicolaka/netshoot:v0.11 as build-environment
+FROM ${BASE} as build-environment
 WORKDIR /opt
 RUN apk add clang lld curl build-base linux-headers git \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup.sh \
@@ -19,7 +19,7 @@ RUN source $HOME/.profile && cargo build --release \
 
 FROM ethereum/client-go:alltools-v1.12.0 as geth
 
-FROM nicolaka/netshoot:v0.11
+FROM ${BASE}
 
 COPY --from=geth /usr/local/bin/* /usr/local/bin/
 
