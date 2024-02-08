@@ -1,0 +1,5 @@
+click-web==0.8.3
+requests==2.31.0
+web3==6.14.0
+kubernetes==29.0.0
+boto3==1.34.19
