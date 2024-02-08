@@ -1,7 +1,7 @@
 base:
-  alpine-3: 
+  python-3.10.13-alpine:
     Dockerfile: Dockerfile.alpine
-  debian-11: 
+  python-3.10.13-bullseye:
     Dockerfile: Dockerfile.debian
 
 platform:
@@ -9,4 +9,4 @@ platform:
   - linux/arm64
 
 version:
-  - 2.12.0
+  - v2.17.0
