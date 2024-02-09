@@ -2,7 +2,7 @@ base:
   python-3.10.13-alpine:
     requirements.txt: requirements.txt
     Dockerfile: Dockerfile.alpine
-  python-3.10.13-bullseye:
+  python-3.10.13-slim-bullseye:
     requirements.txt: requirements.txt
     Dockerfile: Dockerfile.debian
 
