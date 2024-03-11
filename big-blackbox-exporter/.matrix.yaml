@@ -9,4 +9,4 @@ platform:
   - linux/arm64
 
 version:
-  - v0.25.3
+  - 0.25.3
