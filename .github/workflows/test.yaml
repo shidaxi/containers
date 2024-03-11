@@ -1,0 +1,19 @@
+name: Mantle App Build Only
+on:
+  workflow_dispatch:
+    inputs:
+      appName:
+        description: App name to Build
+        type: choice
+        required: true
+        default: mantle-blockscout
+        options:
+        - a0examplegolang
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set APP Info
+        id: appinfo
+        run: |
+          echo Hi
