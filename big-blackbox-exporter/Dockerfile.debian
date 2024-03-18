@@ -12,7 +12,7 @@ RUN apt update && apt install -y wget curl && \
     ln -s /bin/big-blackbox-exporter /bin/blackbox_exporter && \
     apt clean all
 
-ADD blackbox.yaml /etc/blackbox_exporter/config.yml
+ADD config.yaml /etc/blackbox_exporter/config.yml
 
 EXPOSE 9115
 ENTRYPOINT  [ "/bin/blackbox_exporter" ]

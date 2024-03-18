@@ -9,7 +9,7 @@ RUN apk add --no-cache ca-certificates wget && \
         | tar xzf - -C /usr/bin/ && \
         ln -s /bin/big-blackbox-exporter /bin/blackbox_exporter
 
-ADD blackbox.yaml /etc/blackbox_exporter/config.yml
+ADD config.yaml /etc/blackbox_exporter/config.yml
 
 EXPOSE 9115
 ENTRYPOINT  [ "/bin/blackbox_exporter" ]
