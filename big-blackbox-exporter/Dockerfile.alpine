@@ -7,3 +7,9 @@ ARG VERSION BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH
 RUN apk add --no-cache ca-certificates wget && \
     wget -O - https://github.com/shidaxi/big-blackbox-exporter/releases/download/v${VERSION}/big-blackbox-exporter_${VERSION}_${TARGETOS}_${TARGETARCH}.tar.gz \
         | tar xzf - -C /usr/local/bin/
+
+ADD blackbox.yaml /config.yaml
+
+EXPOSE 9115
+ENTRYPOINT  [ "big-blackbox-exporter" ]
+CMD         [ "--config.file=/config.yaml" ]
