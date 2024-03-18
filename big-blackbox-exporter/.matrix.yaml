@@ -1,8 +1,10 @@
 base:
   alpine-3: 
     Dockerfile: Dockerfile.alpine
+    blackbox.yaml: blackbox.yaml
   debian-11: 
     Dockerfile: Dockerfile.debian
+    blackbox.yaml: blackbox.yaml
 
 platform:
   - linux/amd64
