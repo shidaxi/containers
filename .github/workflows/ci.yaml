@@ -50,7 +50,10 @@ jobs:
       matrix:
         base: ${{ fromJson(needs.prepare.outputs.base) }}
         version: ${{ fromJson(needs.prepare.outputs.version) }}
-        registry: ["docker.io", "ghcr.io", "public.ecr.aws"]
+        registry: 
+          - docker.io
+          - ghcr.io
+          # - public.ecr.aws
     permissions:
       contents: read
       packages: write
