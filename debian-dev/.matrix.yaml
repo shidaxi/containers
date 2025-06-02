@@ -1,6 +1,6 @@
 base:
   debian-bookworm: 
-    Dockerfile: Dockerfile.alpine
+    Dockerfile: Dockerfile.debian
 
 platform:
   - linux/amd64
