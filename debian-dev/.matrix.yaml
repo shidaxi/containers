@@ -1,0 +1,10 @@
+base:
+  debian-bookworm: 
+    Dockerfile: Dockerfile.alpine
+
+platform:
+  - linux/amd64
+  - linux/arm64
+
+version:
+  - "2025-06-01"

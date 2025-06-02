@@ -1,0 +1,9 @@
+ARG BASE=_BASE_
+ARG VERSION
+
+FROM ${BASE}
+
+ARG BUILDPLATFORM BUILDOS BUILDARCH TARGETPLATFORM TARGETOS TARGETARCH 
+
+RUN apt update -y && \
+    apt install psmisc net-tools iputils-ping iproute2 tcpdump nmap vim bc wget curl git build-essential python3 jq
